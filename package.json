@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "This is MEAN-Stack architecture.",
   "main": "backend/app.js",
+  "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://Subhendu_io@bitbucket.org/Subhendu_io/bolt-architecture.git"
+    "url": "https://github.com/Subhendu-io/bolt-architecture/"
   },
   "keywords": [
     "NodeJs",
@@ -17,7 +18,12 @@
   "scripts": {
     "start": "forever backend/app.js",
     "dev": "nodemon backend/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nodemon backend/app.js",
+    "build": "npm run build-dev",
+    "build-dev": "cd frontend && ng build --configuration=dev",
+    "build-beta": "cd frontend && ng build --configuration=beta",
+    "build-prod": "cd frontend && && ng build --prod",
+    "heroku-prebuild": "cd frontend && npm install -g @angular/cli && npm install && npm install --only=dev && cd .."
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -38,6 +44,7 @@
     "module-alias": "^2.2.2",
     "moment": "^2.27.0",
     "mongoose": "^5.9.25",
+    "os": "^0.1.1",
     "path": "^0.12.7",
     "query-string": "^6.13.1",
     "request-ip": "^2.1.3",
