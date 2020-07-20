@@ -1,8 +1,6 @@
-## Welcome to GitHub Pages
+## Welcome to Bolt Architecture
 
-You can use the [editor on GitHub](https://github.com/Subhendu-io/bolt-architecture/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Express.js is great frameworks for making a node.js REST APIs however it doesn’t give you any clue on how to organizing your node.js project. While it may sound silly, this is a real problem. The correct organization of your node.js project structure will avoid duplication of code, will improve stability, and potentially, will help you scale your services if is done correctly. This post is extense research, from my years of experience dealing with a poor structured node.js project, bad patterns, and countless hours of refactoring code and moving things around. If you need help to align your node.js project architecture, just drop me a letter at subhendu.luv@gmail.com
 
 ### Markdown
 
