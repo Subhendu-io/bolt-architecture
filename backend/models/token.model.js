@@ -2,29 +2,37 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const tokenSchema = new Schema({
-  'access_token': {
+  accessToken: {
     type     : String,
     required : 'Access Token can\'t be empty.'
   },
-  'refresh_token': {
+  refreshToken: {
     type     : String,
     required : 'Refresh Token can\'t be empty.'
   },
-  'expires_in': {
+  expiresIn: {
     type     : String,
     required : 'Expires In can\'t be empty.'
   },
-  'active': {
+  active: {
     type     : Boolean,
     required : 'Active In can\'t be empty.'
   },
-  'oauth_data': {
+  loginIp: {
+    type     : Object,
+    required : 'Active In can\'t be empty.'
+  },
+  loginUser: {
+    type     : Object,
+    required : 'Active In can\'t be empty.'
+  },
+  oAuthData: {
     type: Object
   },
 }, {
   timestamps: true,
 });
 
-const Token = mongoose.model('Token', tokenSchema, 'app_user');
+const Token = mongoose.model('Token', tokenSchema, 'app_token');
 
 module.exports = Token;

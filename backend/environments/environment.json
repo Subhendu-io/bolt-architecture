@@ -2,9 +2,9 @@
     "development": {
         "BASE_URL"         : "http://localhost:3000",
         
-        "DB_HOST"          : "mean-io.n7ord.gcp.mongodb.net",
+        "DB_HOST"          : "bolt.n7ord.gcp.mongodb.net",
         "DB_PORT"          : "",
-        "DB_DATABASE_NAME" : "mean-io",
+        "DB_DATABASE_NAME" : "bolt",
         "DB_USER_NAME"     : "subhendu_io",
         "DB_PASSWORD"      : "143$hadow",
         "REPLICA_SET"      : "",

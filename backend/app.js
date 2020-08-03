@@ -1,20 +1,20 @@
 require('module-alias/register');
 require('@app/core/config');
-// require('@app/core/mongo');
+require('@app/core/mongo');
 
 const express = require('express');
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const path = require('path');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
+
+const cors = require('cors');
 const featurePolicy = require('feature-policy');
+// const expressEnforcesSSL = require('express-enforces-ssl');
 
 const router = require('@app/router');
-
-// const cors = require('cors');
-// const expressEnforcesSSL = require('express-enforces-ssl');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,7 +26,7 @@ const initiateExpressListener = async () => {
   console.info('Initializing Node Server...');
   app.enable('trust proxy');
 
-  // app.use(cors());
+  app.use(cors());
   // app.use(expressEnforcesSSL());
 
   app.use(helmet());
@@ -48,7 +48,6 @@ const initiateExpressListener = async () => {
   }));
 
   app.use(compression());
-
   app.use(bodyParser.raw({ limit: '50mb' }));
   app.use(bodyParser.text({ limit: '50mb' }));
   app.use(bodyParser.json({ limit: '50mb' }));
@@ -56,7 +55,6 @@ const initiateExpressListener = async () => {
 
   app.use(cookieParser());
 
-  // api routes
   app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS, POST, PUT');
@@ -67,6 +65,7 @@ const initiateExpressListener = async () => {
     next();
   });
 
+  // api routes
   app.use('/api/v1', router);
 
   // error handling
@@ -74,15 +73,31 @@ const initiateExpressListener = async () => {
     if(err.name && err.name === 'ValidationError') {
       var validationErrors = [];
       Object.keys(err.errors).forEach(key => validationErrors.push(err.errors[key].message));
-      res.status(422).send(validationErrors);
-    } else if(err && err.status && err.status !== 200) {
-      res.status(err.status).send({
+      res.status(422).send({
+        success : false,
+        error   : true,
+        status  : 422,
+        errors  : validationErrors,
+        title   : err.title ? err.title : 'Validation error!',
+        message : err.message ? err.message : 'Sorry, due to an validation error, we could not proccess your request at this time.'
+      });
+    } else if(err.formatter) {
+      res.status(422).send({
+        success : false,
+        error   : true,
+        status  : 422,
+        errors  : err.array(),
+        title   : err.title ? err.title : 'Validation error!',
+        message : err.message ? err.message : 'Sorry, due to an validation error, we could not proccess your request at this time.'
+      });
+    } else if(err) {
+      res.status(err.status ? err.status : 500).send({
         success : false,
         error   : true,
         status  : err.status ? err.status : 500,
-        errors  : err.errors ? err.errors : undefined,
+        errors  : err.errors ? err.errors : err,
         title   : err.title ? err.title : 'Internal server error!',
-        message : err.message ? err.message : 'Undefined server error.'
+        message : err.message ? err.message : 'Sorry, due to an internal server error, we could not proccess your request at this time.'
       });
     }
     next();
@@ -110,36 +125,16 @@ const initiateExpressListener = async () => {
   app.listen(port);
 };
 
-// mongoose.connection.on('connected', () => {
-initiateExpressListener().then(() => {
-  getIP();
-  console.log('Node Server Initialized On', port);
-}).catch((error) => {
-  console.error('Node Server Initialization Failed : ', error);
-});
-// });
-
-function getIP() {
-  var os = require('os');
-  var ifaces = os.networkInterfaces();
-
-  Object.keys(ifaces).forEach(function (ifname) {
-    var alias = 0;
-
-    ifaces[ifname].forEach(function (iface) {
-      if('IPv4' !== iface.family || iface.internal !== false) {
-        // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
-        return;
-      }
-
-      if(alias >= 1) {
-        // this single interface has multiple ipv4 addresses
-        console.log(ifname + ':' + alias, iface.address);
-      } else {
-        // this interface has only one ipv4 adress
-        console.log(ifname, iface.address);
-      }
-      ++alias;
-    });
+mongoose.connection.on('connected', () => {
+  initiateExpressListener().then(() => {
+    console.log(`
+      --------------------------------
+            MongoDB Initialized ✔
+      --------------------------------
+       Node Server Initialized : ${port}
+      --------------------------------
+    `);
+  }).catch((error) => {
+    console.error('ERROR:: Node Server Initialization Failed : ', error);
   });
-}
+});

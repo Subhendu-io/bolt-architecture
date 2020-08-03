@@ -12,10 +12,8 @@ const generateMongoUrl = () => {
   return mongoURL;
 };
 
-mongoose.connect(generateMongoUrl(), {useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true}, (err) => {
-  if(!err) {
-    console.log('MongoDB Initialized...');
-  } else {
+mongoose.connect(generateMongoUrl(), { useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
+  if(err) {
     console.log('MongoDB Initialization Failed : ', err);
   }
 });

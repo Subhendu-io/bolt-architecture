@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const roleSchema = new Schema({
-  'role': {
+  role: {
     type      : String,
     required  : 'Role can\'t be empty.',
     uppercase : true,
     unique    : true,
     trim      : true,
   },
-  'scope': {
+  scope: {
     type: [String],
   },
 }, {

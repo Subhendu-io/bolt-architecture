@@ -1,137 +1,85 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const globalHelper = require('../helpers/global.helper');
 
 const User = mongoose.model('User');
-const Role = mongoose.model('Role');
 
-module.exports.getUser = async (_mQuery, _mProjection, next) => {
-  return User.findOne(_mQuery, _mProjection, (errUser, docUser) => {
-    if(errUser) {
-      return next(errUser);
-    } else if(docUser && docUser['email']) {
-      return docUser;
-    } else {
-      return next({
-        status  : 404,
-        title   : 'User not found.',
-        message : 'Sorry, we could not find any user with this email.'
-      });
-    }
-  });
-};
-
-module.exports.findUser = async (_mQuery, _mProjection, next) => {
-  return User.findOne(_mQuery, _mProjection, (errUser, docUser) => {
-    if(errUser) {
-      return next(errUser);
-    } else if(docUser && docUser['email']) {
-      return docUser;
-    } else {
-      return next({
-        status  : 404,
-        title   : 'User not found.',
-        message : 'Sorry, we could not find any user with this email.'
-      });
-    }
-  });
-};
-
-module.exports.findUserByEmail = async (_email, next) => {
+module.exports.createUser = async (_user, next) => {
   try {
-    const emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-
-    if(_email && emailRegex.test(_email)) {
-      return User.findOne({'email': _email}, (errUser, docUser) => {
+    return new Promise(resolve => {
+      User.create(_user, (errUser, docUser) => {
         if(errUser) {
-          console.log('********* @ user.service.js ==> findUserByEmail ==> Error => ', errUser);
-          return next(errUser);
-        } else if(docUser && docUser['email'] && docUser['email'] === _email) {
-          return docUser;
+          if(errUser.code == 11000) {
+            return next({
+              status  : 422,
+              errors  : errUser,
+              title   : 'Email or Phone No. already exists',
+              message : 'This Email or Phone No. is already registered.'
+            });
+          } else {
+            return next(errUser);
+          }
         } else {
-          return next({
-            status  : 404,
-            title   : 'User not found.',
-            message : 'Sorry, we could not find any user with this email.'
-          });
+          return resolve(docUser);
         }
       });
-    } else {
-      return next({
-        status  : 400,
-        title   : 'User not found.',
-        message : 'Sorry, we could not find any user with this email.'
-      });
-    }
-  } catch (error) {
-    return next({
-      status  : 500,
-      errors  : error,
-      title   : 'Internal server Error!',
-      message : 'Sorry, due to an internal error, we could not find user at this time.'
     });
+  } catch (error) {
+    return next(error);
   }
 };
 
-module.exports.hasRole = (user, _role) => {
-  if(user && user['email'] && user['deco_acl']) {
-    for(let i = 0; i < user['deco_acl'].length; i++) {
-      if(user['deco_acl'][i].role === _role) {
-        return true;
-      }
-    }
-    return false;
-  } else {
-    return false;
-  }
-};
-
-module.exports.updateUserRole = async (_email, _role, next) => {
+module.exports.getUsers = async (_mQuery, _mProjection, next) => {
   try {
-    await Role.findOne({'role': _role}, async (errRole, docRole) => {
-      if(errRole) {
-        return next(errRole);
-      } else if(docRole['role']) {
-        const user = {
-          'deco_acl': [
-            {
-              'role'       : docRole['role'],
-              'assignedAt' : new Date(),
-              'assignedBy' : _email
-            }
-          ]
-        };
-
-        await User.findOneAndUpdate({'email': _email}, user, { new: true }, (errUser, docUser) => {
-          if(errUser) {
-            return next(errUser);
-          } else if(docUser['deco_acl']) {
-            return {
-              'success' : true,
-              'user'    : docUser,
-              'message' : 'User role updated successfully!',
-            };
-          } else {
-            return next({
-              status  : 500,
-              title   : 'Internal server Error!',
-              message : 'Sorry, due to an internal error, we could not update user role at this time.'
-            });
-          }
-        });
+    return await User.find(_mQuery, _mProjection, (errUser, docUser) => {
+      if(errUser) {
+        return next(errUser);
       } else {
-        return next({
-          status  : 500,
-          title   : 'Internal server Error!',
-          message : 'Sorry, due to an internal error, we could not update user role at this time.'
-        });
+        return docUser;
       }
     });
   } catch (error) {
-    console.log('********** @ user.service.js ==> updateUserRoleByEmail() ==> User.findOneAndUpdate() :: error ::', error);
-    return next({
-      status  : 500,
-      errors  : error,
-      title   : 'Internal server Error!',
-      message : 'Sorry, due to an internal error, we could not update user role at this time.'
+    return next(error);
+  }
+};
+
+module.exports.getUser = async (_user, next) => {
+  try {
+    return await User.findOne(_user, 'email password username firstName lastName roles saltSecret', (errUser, docUser) => {
+      if(errUser) {
+        return next(errUser);
+      } else {
+        return docUser;
+      }
     });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+module.exports.getEncryptedUser = async (_user, next) => {
+  try {
+    return new Promise(resolve => {
+      bcrypt.genSalt(13, async (err, secrate) => {
+        const _encrypted = await globalHelper.encryptPassword(_user.password, secrate);
+        _user.password = _encrypted;
+        _user.saltSecret = secrate;
+        return resolve(_user);
+      });
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+module.exports.getDecryptedUser = async (_user, next) => {
+  try {
+    return new Promise(async resolve => {
+      const decrypt = await globalHelper.decryptPassword(_user.password, _user.saltSecret);
+      _user.password = decrypt;
+      return resolve(_user);
+    });
+  } catch (error) {
+    return next(error);
   }
 };

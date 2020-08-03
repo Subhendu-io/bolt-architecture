@@ -1,49 +1,163 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const requestIp = require('request-ip');
 
 const Token = mongoose.model('Token');
+const globalHelper = require('../helpers/global.helper');
+const emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 
-const globalModule = require('../helpers/global.module');
+module.exports.createToken = async (_user, next) => {
+  try {
+    return new Promise(resolve => {
+      const tokenUser = {
+        _id      : _user['_id'],
+        email    : _user['email'],
+        roles    : _user['roles'],
+        username : _user['username'],
+        scia     : globalHelper.getEncrypted(_user.currentIp, process.env.CRYPTO_PRIVATE_KEY)
+      };
+      const _expiresIn = '2h';
+      const accessToken = jwt.sign(tokenUser, process.env.ACCESS_TOKEN_SECRET, { 'expiresIn': _expiresIn });
+      const refreshToken = jwt.sign(tokenUser, process.env.REFRESH_TOKEN_SECRET);
 
-module.exports.createToken = async (_user, req, next) => {
-  const userData = {
-    '_id'   : _user['_id'],
-    'name'  : _user['name'],
-    'email' : _user['email'],
-    'roles' : _user['deco_acl'],
-    'scia'  : globalModule.getEncrypted(requestIp.getClientIp(req), process.env.CRYPTO_PRIVATE_KEY)
-  };
-  const _expiresIn = '5h';
-  const accessToken = jwt.sign(userData, process.env.ACCESS_TOKEN_SECRET, { 'expiresIn': _expiresIn });
-  const refreshToken = jwt.sign(userData, process.env.REFRESH_TOKEN_SECRET);
-  const tokenData = {
-    'expires_in'    : _expiresIn,
-    'access_token'  : accessToken,
-    'refresh_token' : refreshToken
-  };
+      const _tokenData = {
+        active       : true,
+        accessToken  : accessToken,
+        refreshToken : refreshToken,
+        expiresIn    : _expiresIn,
+        loginIp      : _user.currentIp,
+        loginUser    : tokenUser,
+      };
 
-  let token = new Token();
-
-  token['active'] = true;
-  token['access_token'] = tokenData['access_token'];
-  token['refresh_token'] = tokenData['refresh_token'];
-  token['expires_in'] = tokenData['expires_in'];
-  token['login_ip'] = requestIp.getClientIp(req);
-  token['login_user'] = userData;
-  token['oauth_data'] = _user['oauthData'] ? _user['oauthData'] : {};
-
-  return await token.save().then(docToken => {
-    if(docToken && docToken['login_user']) {
-      return docToken;
-    } else {
-      return next({
-        status  : 500,
-        title   : 'Internal server error!',
-        message : 'Sorry, due to an internal server error, we could logged you with this email at this time.'
+      Token.create(_tokenData, (errToken, docToken) => {
+        if(errToken) {
+          return next(errToken);
+        } else {
+          return resolve(docToken);
+        }
       });
-    }
-  }).catch(errToken => {
-    return next(errToken);
-  });
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.refreshToken = async (_tokenData, next) => {
+  try {
+    return new Promise(resolve => {
+      Token.findOne({refreshToken: _tokenData.refreshToken, active: true}, (errToken, docToken) => {
+        if(errToken) {
+          return next(errToken);
+        } else if(docToken && docToken.refreshToken === _tokenData.refreshToken) {
+          jwt.verify(docToken.refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+            if(err) {
+              return next({
+                status  : 403,
+                errors  : err,
+                title   : 'Unauthorized Request!',
+                message : 'Unauthorized Request User.'
+              });
+            } else if(user.email == undefined || user.email == null || emailRegex.test(user.email) == false) {
+              return next({
+                status  : 403,
+                title   : 'Unauthorized Request!',
+                message : 'Unauthorized Request User.'
+              });
+            } else {
+              const userData = {
+                _id   : user._id,
+                email : user.email,
+                name  : user.name,
+                roles : user.roles,
+                scia  : user.scia
+              };
+
+              const _expiresIn = '2h';
+              const accessToken = jwt.sign(userData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: _expiresIn });
+
+              const _tokenData = {
+                accessToken: accessToken,
+              };
+
+              Token.findOneAndUpdate({refreshToken: docToken.refreshToken, active: true}, _tokenData, {new: true}, (tokenErr, tokenDoc) => {
+                if(tokenErr) {
+                  return next(tokenErr);
+                } else if(tokenDoc) {
+                  return resolve(tokenDoc);
+                } else {
+                  return next({
+                    status  : 403,
+                    title   : 'Internal server error!',
+                    message : 'Sorry, due an internal error, we could not refresh token at this time.'
+                  });
+                }
+              });
+            }
+          });
+        } else {
+          return next({
+            status  : 403,
+            title   : 'Unauthorized Request!',
+            message : 'Unauthorized Request User.'
+          });
+        }
+      });
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.destroyToken = async (_tokenData, next) => {
+  try {
+    return new Promise(resolve => {
+      Token.findOne({refreshToken: _tokenData.refreshToken, active: true}, (errToken, docToken) => {
+        if(errToken) {
+          return next(errToken);
+        } else if(docToken && docToken.refreshToken === _tokenData.refreshToken) {
+          jwt.verify(docToken.refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+            if(err) {
+              return next({
+                status  : 403,
+                errors  : err,
+                title   : 'Unauthorized Request!',
+                message : 'Unauthorized Request User.'
+              });
+            } else if(user.email == undefined || user.email == null || emailRegex.test(user.email) == false) {
+              return next({
+                status  : 403,
+                title   : 'Unauthorized Request!',
+                message : 'Unauthorized Request User.'
+              });
+            } else {
+              const _tokenData = {
+                active: false
+              };
+
+              Token.findOneAndUpdate({refreshToken: docToken.refreshToken, active: true}, _tokenData, {new: true}, (tokenErr, tokenDoc) => {
+                if(tokenErr) {
+                  return next(tokenErr);
+                } else if(tokenDoc) {
+                  return resolve(tokenDoc);
+                } else {
+                  return next({
+                    status  : 403,
+                    title   : 'Internal server error!',
+                    message : 'Sorry, due an internal error, we could not refresh token at this time.'
+                  });
+                }
+              });
+            }
+          });
+        } else {
+          return next({
+            status  : 403,
+            title   : 'Unauthorized Request!',
+            message : 'Unauthorized Request User.'
+          });
+        }
+      });
+    });
+  } catch (error) {
+    next(error);
+  }
 };

@@ -1,136 +1,40 @@
-const mongoose = require('mongoose');
+const { validationResult } = require('express-validator');
+const roleService = require('../services/role.service');
 
-const Role = mongoose.model('Role');
-
-module.exports.createRole = (req, res, next) => {
+module.exports.createRole = async (req, res, next) => {
   try {
-    const role = new Role();
+    const _errors = validationResult(req);
+    const _request = req.body;
 
-    role.role = req.body.role;
-    role.scope = req.body.scope;
-    role.save((errRole, docRole) => {
-      if(!errRole) {
-        return res.send({
-          'success' : true,
-          'message' : 'Role Created Successfully!',
-          'role'    : docRole
-        });
-      } else {
-        if(errRole.code == 11000) {
-          return next({
-            status  : 422,
-            message : 'This role is already there'
-          });
-        } else {
-          return next(errRole);
-        }
-      }
-    });
+    if(!_errors.isEmpty()) {
+      return next(_errors);
+    } else {
+      const _role = {
+        role  : _request.role,
+        scope : _request.scope
+      };
+      const role = await roleService.createRole(_role, next);
+      return res.send({
+        success : true,
+        title   : 'Role created successfully!',
+        message : 'User role hase been created successfully.',
+        role    : role
+      });
+    }
   } catch (error) {
-    return next({
-      status  : 500,
-      errors  : error,
-      title   : 'Internal server Error!',
-      message : 'Sorry, due to an internal error, we could not update role at this time.'
-    });
+    return next(error);
   }
 };
-module.exports.getRoles = (req, res, next) => {
+module.exports.getRoles = async (req, res, next) => {
   try {
-    Role.find({}, (errRole, docRole) => {
-      if(!errRole) {
-        return res.send({
-          'success' : true,
-          'message' : 'All Roles Data Sent Successfully!',
-          'roles'   : docRole
-        });
-      } else {
-        return next(errRole);
-      }
+    const role = await roleService.getRoles(next);
+    return res.send({
+      success : true,
+      title   : 'Roles sent successfully!',
+      message : 'User roles sent successfully.',
+      role    : role
     });
   } catch (error) {
-    return next({
-      status  : 500,
-      errors  : error,
-      title   : 'Internal server Error!',
-      message : 'Sorry, due to an internal error, we could not update role at this time.'
-    });
-  }
-};
-module.exports.getRoleById = (req, res, next) => {
-  try {
-    const _id = req.params.id;
-
-    Role.findById(_id, (errRole, docRole) => {
-      if(!errRole) {
-        return res.send({
-          'success' : true,
-          'message' : 'Role Data Sent Successfully!',
-          'role'    : docRole
-        });
-      } else {
-        return next(errRole);
-      }
-    });
-  } catch (error) {
-    return next({
-      status  : 500,
-      errors  : error,
-      title   : 'Internal server Error!',
-      message : 'Sorry, due an internal error, we could not update role at this time.'
-    });
-  }
-};
-module.exports.updateRoleById = (req, res, next) => {
-  try {
-    const _id = req.params.id;
-
-    const role = {
-      'role'  : req.body.role,
-      'scope' : req.body.scope
-    };
-
-    Role.findByIdAndUpdate(_id, role, { new: true }, (errRole, docRole) => {
-      if(!errRole) {
-        return res.send({
-          'success' : true,
-          'message' : 'Role Updated Successfully!',
-          'role'    : docRole,
-        });
-      } else {
-        return next(errRole);
-      }
-    });
-  } catch (error) {
-    return next({
-      status  : 500,
-      errors  : error,
-      title   : 'Internal server Error!',
-      message : 'Sorry, due an internal error, we could not update role at this time.'
-    });
-  }
-};
-module.exports.deleteRoleById = (req, res, next) => {
-  try {
-    const _id = req.params.id;
-
-    Role.findByIdAndRemove(_id, (errRole, docRole) => {
-      if(!errRole) {
-        return res.send({
-          'success' : true,
-          'message' : 'Role Deleted Successfully!',
-          'role'    : docRole
-        });
-      } else {
-        return next(errRole);
-      }
-    });
-  } catch (error) {
-    return next({
-      status  : 500,
-      errors  : error,
-      title   : 'Internal server Error!',
-      message : 'Sorry, due an internal error, we could not update role at this time.'
-    });
+    return next(error);
   }
 };
