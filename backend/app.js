@@ -127,14 +127,12 @@ const initiateExpressListener = async () => {
 
 mongoose.connection.on('connected', () => {
   initiateExpressListener().then(() => {
-    console.log(`
-      --------------------------------
-            MongoDB Initialized ✔
-      --------------------------------
-       Node Server Initialized : ${port}
-      --------------------------------
-    `);
+    console.log('\x1b[37m', '--------------------------------');
+    console.log('\x1b[34m', ' MongoDB Initialized ✔');
+    console.log('\x1b[37m', '--------------------------------');
+    console.log('\x1b[32m', ' Node Server Initialized: ' + port);
+    console.log('\x1b[37m', '--------------------------------');
   }).catch((error) => {
-    console.error('ERROR:: Node Server Initialization Failed : ', error);
+    console.error('ERROR:: Node Server Initialization Failed: ', error);
   });
 });

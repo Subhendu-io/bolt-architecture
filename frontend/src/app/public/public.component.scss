@@ -1,0 +1,196 @@
+.site-logo {
+  width: auto;
+  height: 50px;
+  margin-top: -10px;
+  margin-bottom: -10px;
+}
+.site-header {
+  background-color: rgba(0, 0, 0, 0.85);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+.site-header a {
+  color: #999;
+  transition: ease-in-out color 0.15s;
+}
+.site-header a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+.navbar-light .navbar-nav .nav-link {
+  font-weight: 600;
+}
+.header {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #ebe9e9;
+}
+.header .btn {
+  margin-bottom: 5px !important;
+  min-width: 100px !important;
+}
+.navbar-toggler {
+  padding: 0.75rem 0.75rem;
+  margin-right: 14px;
+}
+/*
+  * Dummy devices (replace them with your own or something else entirely!)
+  */
+
+.form-inline {
+  margin-bottom: 0;
+}
+
+/*
+  * Extra utilities
+  */
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+}
+
+.flex-equal > * {
+  -ms-flex: 1;
+  -webkit-box-flex: 1;
+  flex: 1;
+}
+@media (min-width: 768px) {
+  .flex-md-equal > * {
+    -ms-flex: 1;
+    -webkit-box-flex: 1;
+    flex: 1;
+  }
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+// .app-footer{
+//   text-align: center;
+//   padding: 22px;
+//   font-size: 15px;
+// }
+.footer{
+  background-color: #14110f;
+  padding: 0;
+  ul{
+      .app-footer-logo{
+          height: 50px;
+          a{
+              padding: 0.4rem;
+              bottom: -5px;
+              .app-footer-logo-img{
+                  display: inline-block;
+                  height: 23px;
+                  width: 25px;
+                  background-size: cover;
+                  background-image: url('/assets/images/acs-logo-white.png');
+              }
+          }
+      }
+      .app-footer-logo:hover{
+          .app-footer-logo-img{
+              background-image: url('/assets/images/acs-logo-black.png') !important;
+          }
+      }
+      li{
+          a{
+              padding: 0.8rem;
+          color: white;
+          }
+      }
+      .social{
+          i{
+              color: #fff;
+              font-size: 20px;
+              line-height: 1;
+          }
+      }
+      .social:hover{
+          background: #fed221;
+          i{
+              color: black;
+          }
+      }
+  }
+  .copyright{
+      font-size: 13px;
+      color: #fecb00;
+      padding: 0.8rem;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .copyright{
+    float: initial !important;
+  }
+}
+.navbar-toggler{
+  padding: 8px 10px;
+  border-color: rgb(254, 213, 55);
+}
+.navbar .navbar-toggler .navbar-toggler-icon{
+  width: 18px;
+}
+.app-sidebar{
+  position: fixed;
+  display: block;
+  top: 0;
+  height: 100vh;
+  width: 260px;
+  right: auto;
+  left: 0;
+  z-index: 1032;
+  visibility: visible;
+  background-color: #f1f2f2;
+  overflow-y: visible;
+  border-top: none;
+  text-align: left;
+  padding-right: 0px;
+  padding-left: 0;
+  box-shadow: 0 16px 20px -12px rgba(0, 0, 0, 0.15), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.15);
+  .app-sidebar-list{
+    margin-top: 20px;
+    display: block;
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+    .app-sidebar-item{
+      a{
+        padding: 10px 30px;
+        margin-bottom: 15px;
+      }
+      button{
+        margin: 0 15px;
+        text-align: left;
+        border-radius: 3px;
+        color: #3C4858;
+        padding-left: 10px;
+        padding-right: 10px;
+        text-transform: capitalize;
+        font-size: 14px;
+        padding: 10px 15px;
+        width: 90%;
+        &:hover{
+          background-color: rgba(200, 200, 200, 0.2) !important;
+          // box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);;
+        }
+        mat-icon{
+          margin-right: 7px;
+          font-size: 21px;
+        }
+      }
+    }
+  }
+  .app-sidebar-close{
+    display: inline-block;
+    position: absolute;
+    top: 16px;
+    right: -40px;
+  }
+}

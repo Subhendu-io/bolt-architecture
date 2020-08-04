@@ -1,6 +1,19 @@
 const bcrypt = require('bcryptjs');
 const globalHelper = require('../helpers/global.helper');
 
+module.exports.sendHello = async (req, res, next) => {
+  try {
+    return res.send({
+      success : true,
+      data    : 'Hello World!',
+      title   : 'Wellcome to BOLT!',
+      message : 'This is an MEAN-Stack based nodejs app architecture',
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 module.exports.test = async (req, res, next) => {
   try {
     bcrypt.genSalt(10, async (err, secrate) => {

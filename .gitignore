@@ -13,6 +13,7 @@ benchmarks/graphs
 jspm_packages
 node_modules
 frontend/node_modules
+frontend/e2e
 
 # profiling files
 chrome-profiler-events*.json

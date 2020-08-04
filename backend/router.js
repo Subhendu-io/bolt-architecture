@@ -12,6 +12,7 @@ const roleValidator = require('./validators/role.validator');
 
 // test
 const testController = require('./controllers/test.controller');
+router.get('/app', testController.sendHello);
 router.get('/test', testController.test);
 
 // auth routes
