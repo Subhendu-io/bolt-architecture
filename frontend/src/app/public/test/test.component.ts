@@ -18,15 +18,15 @@ export class TestComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.ngxLoader.start();
-    this.api.get('app').then(response => {
-      this.ngxLoader.stop();
-      if (response['success']) {
-        this.appData = response;
-        this.toastr.success(response['message'], response['title']);
-      } else {
-        this.toastr.error(response['message'], response['title']);
-      }
-    });
+    // this.ngxLoader.start();
+    // this.api.get('app').then(response => {
+    //   this.ngxLoader.stop();
+    //   if (response['success']) {
+    //     this.appData = response;
+    //     this.toastr.success(response['message'], response['title']);
+    //   } else {
+    //     this.toastr.error(response['message'], response['title']);
+    //   }
+    // });
   }
 }

@@ -39,6 +39,8 @@ export class AuthInterceptor implements HttpInterceptor {
             return this.handle429Error(request, error, next);
           case 500:
             return this.handle500Error(request, error, next);
+          case 0:
+            return this.handle500Error(request, error, next);
         }
       } else {
         return this.handleUnknownError(request, error, next);
@@ -51,7 +53,6 @@ export class AuthInterceptor implements HttpInterceptor {
     this.ngxLoader.stop();
     this.ngxLoader.stopBackground();
     this.toastr.error(error['error']['message'] ? error['error']['message'] : 'Sorry, due an bad request data, we could not proccess your request at this time.', error['error']['title'] ? error['error']['title'] : 'Bad Request Data!');
-
     return throwError(error);
   }
 
@@ -102,7 +103,6 @@ export class AuthInterceptor implements HttpInterceptor {
       this.ngxLoader.stop();
       this.ngxLoader.stopBackground();
       this.toastr.error(error['error']['message'] ? error['error']['message'] : 'Sorry, due an forbidden request, we could not proccess your request at this time.', error['error']['title'] ? error['error']['title'] : 'Forbidden Request!');
-
       return throwError(error);
     }
   }
@@ -136,12 +136,9 @@ export class AuthInterceptor implements HttpInterceptor {
 
   // Internal Server Error
   public handle500Error(request: HttpRequest<any>, error: HttpErrorResponse, next: HttpHandler) {
-    console.log('@handle500Error Error Response => ', error);
-
     this.ngxLoader.stop();
     this.ngxLoader.stopBackground();
     this.toastr.error(error['error']['message'] ? error['error']['message'] : 'Sorry, due to internal server error, we could not proccess your request at this time.', error['error']['title'] ? error['error']['title'] : 'Internal Server Error!');
-
     return throwError(error);
   }
 
@@ -150,7 +147,6 @@ export class AuthInterceptor implements HttpInterceptor {
     this.ngxLoader.stop();
     this.ngxLoader.stopBackground();
     this.toastr.error(error['error']['message'] ? error['error']['message'] : 'Sorry, due to internal server error, we could not proccess your request at this time.', error['error']['title'] ? error['error']['title'] : 'Internal Server Error!');
-
     return throwError(error);
   }
 

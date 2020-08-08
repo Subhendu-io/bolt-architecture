@@ -1,1 +1,109 @@
 @import '~ngx-toastr/toastr';
+@import './assets/scss/themes';
+@import './assets/scss/variables';
+
+.light-theme {
+    color: $app-dark;
+    background: $app-light;
+    .app-navbar-bg{
+        background: $app-light;
+    }
+    .card{
+        color: $app-dark;
+        background-color: $app-light;
+    }
+    .app-bg-primary{
+        color: $app-light;
+        background-image: $app-light-primary-bg;
+    }
+    .app-bg-accent{
+        color: $app-light;
+        background-image: $app-light-accent-bg;
+    }
+    .app-bg-warn{
+        color: $app-light;
+        background-image: $app-light-warn-bg;
+    }
+    .app-home{
+        .app-bg-top{
+            background: url('assets/images/banner-4.png') no-repeat;
+            background-size: 100% 80%
+        }
+        .app-bg-center{
+            background: url('assets/images/service-bg.png') no-repeat;
+            background-size: cover;
+        }
+        .app-bg-bottom{
+            background: url('assets/images/testimonials-bg.png') no-repeat;
+            background-size: 40% 100%;
+            background-position: left center;
+        }
+    }
+}
+.dark-theme {
+    color: $app-light;
+    background-color: $app-dark;
+    .app-navbar-bg{
+        background: $app-dark;
+    }
+    .card{
+        color: $app-light;
+        background-color: $app-dark;
+    }
+    .app-bg-primary{
+        color: $app-light;
+        background-image: $app-dark-primary-bg;
+    }
+    .app-bg-accent{
+        color: $app-light;
+        background-image: $app-dark-accent-bg;
+    }
+    .app-bg-warn{
+        color: $app-light;
+        background-image: $app-dark-warn-bg;
+    }
+    .app-home{
+        .app-bg-top{
+            background: url('assets/images/banner-4.dark.png') no-repeat;
+            background-size: 100% 80%
+        }
+        .app-bg-center{
+            background: url('assets/images/service-bg.dark.png') no-repeat;
+            background-size: cover;
+        }
+        .app-bg-bottom{
+            background: url('assets/images/testimonials-bg.dark.png') no-repeat;
+            background-size: 40% 100%;
+            background-position: left center;
+        }
+    }
+}
+
+* {
+    outline: 0 !important;
+}
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+.card{
+    border: 0;
+    .card-body{
+        .card-title{
+            margin: 20px 0px;
+        }
+        .card-text{
+            color: lightgray;
+        }
+    }
+}
+.app-shadow{
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.10), 0 7px 10px -5px rgba(0, 0, 0, 0.40);
+}
+.app-rounded-10{
+    border-radius: 10px;
+}
+.app-rounded-20{
+    border-radius: 20px;
+}

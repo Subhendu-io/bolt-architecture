@@ -8,15 +8,29 @@ import { ToastrModule } from 'ngx-toastr';
 import { PublicComponent } from '@app/public/public.component';
 
 import { TestComponent } from '@app/public/test/test.component';
-
+import { LoginComponent } from '@app/public/login/login.component';
+import { RegisterComponent } from '@app/public/register/register.component';
+import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
   {
     path: '',
     component: PublicComponent,
+    // canActivate: [],
+    // data: { roles: ['DEVELOPER', 'PREDEVELOPER'] },
     children: [
+      {
+        path: 'auth',
+        // canActivateChild: [AuthGuard],
+        // data: { roles: ['DEVELOPER'] },
+        children: [
+          { path: 'login', component: LoginComponent },
+          { path: 'register', component: RegisterComponent },
+        ]
+      },
+      { path: 'home', component: HomeComponent },
       { path: 'test', component: TestComponent },
-      { path: '**', pathMatch: 'full', redirectTo: 'test' }
+      { path: '**', pathMatch: 'full', redirectTo: 'home' }
     ]
   }
 ];
@@ -25,7 +39,10 @@ export const appRouting = RouterModule.forChild(routes);
 @NgModule({
   declarations: [
     PublicComponent,
-    TestComponent
+    TestComponent,
+    HomeComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     ...SHARED_MODULES,

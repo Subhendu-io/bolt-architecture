@@ -38,7 +38,7 @@
               "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ],
             "allowedCommonJsDependencies": [
-              "crypto-js", "rxjs/internal/observable/throwError", "rxjs/add/operator/catch",
+              "crypto-js", "rxjs/internal/observable/throwError", "rxjs/add/operator/catch", "hammerjs",
               "rxjs/add/operator/map", "rxjs-compat/add/operator/catch", "rxjs-compat/add/operator/map"
             ]
           },
@@ -191,6 +191,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "bolt-architecture"
 }

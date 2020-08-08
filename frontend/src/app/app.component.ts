@@ -9,4 +9,6 @@ import { environment } from '@env/environment';
 export class AppComponent {
   logo = environment.APP_LOGO;
   title = 'Developer | ' + environment.COMPANY_NAME;
+
+  constructor() { }
 }
