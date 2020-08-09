@@ -66,6 +66,27 @@ export class AuthService {
         return response;
       });
   }
+  register(email: string, password: string): Observable<any> {
+    const credential = {
+      email: email.toLowerCase(),
+      password: this.globalService.getEncrypted(password)
+    };
+    return this.httpClient.post(this.api + '/auth/login', credential)
+      .pipe(catchError(err => {
+        this.ngxLoader.stop();
+        return throwError(err);
+      }))
+      .map(response => {
+        if (response['user'] !== undefined && response['_jwt'] !== undefined) {
+          this.tokenData = this.globalService.getDecrypted(response['_jwt']);
+          localStorage.setItem('_td', response['_jwt']);
+
+          this.currentUser = this.globalService.getJwtUser(this.tokenData['access_token']);
+          localStorage.setItem('_cu', this.globalService.getEncrypted(this.currentUser));
+        }
+        return response;
+      });
+  }
   refreshToken(): Observable<any> {
     if (localStorage.getItem('_td')) {
       const tokenData = this.globalService.getDecrypted(localStorage.getItem('_td'));

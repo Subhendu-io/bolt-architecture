@@ -1,0 +1,18 @@
+.app-main{
+    height: 100%;
+    .app-login-bg{
+        background-image: url('/assets/images/bbg-1.jpg');
+        background-size: cover;
+    }
+    .app-form-wrapper{
+        .app-form{
+            padding: 40px 30px;
+            .app-form-title{
+                font-weight: 100;
+            }
+            .app-divider{
+                margin: 15px auto;
+            }
+        }
+    }
+}

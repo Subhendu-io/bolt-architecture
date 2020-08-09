@@ -1,1 +1,93 @@
-<p>register works!</p>
+<main class="app-main app-register">
+    <section class="app-bg-top h-100">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center justify-content-center">
+                <div class="col-md-10">
+                    <div class="card app-shadow app-rounded-10">
+                        <div fxLayout="row">
+                            <div fxFlex class="app-register-bg p-4">
+                                <img width="80px" src="assets/images/logo.png" alt="">
+                            </div>
+                            <div fxFlex class="app-form-wrapper">
+                                <form class="app-form" [formGroup]="registerForm" (ngSubmit)="register(registerForm.value)">
+                                    <h4 class="app-form-title mb-3">Register Now!</h4>
+                                    <div fxLayout="row" fxLayoutGap="10px">
+                                        <div fxFlex>
+                                            <mat-form-field appearance="outline" class="full-width-field">
+                                                <mat-label>First Name</mat-label>
+                                                <input matInput type="text" placeholder="Joh">
+                                                <mat-icon matSuffix>person</mat-icon>
+                                            </mat-form-field>
+                                        </div>
+                                        <div fxFlex>
+                                            <mat-form-field appearance="outline" class="full-width-field">
+                                                <mat-label>Last Name</mat-label>
+                                                <input matInput type="text" placeholder="Doe">
+                                                <mat-icon matSuffix>person</mat-icon>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <mat-form-field appearance="outline" class="full-width-field">
+                                        <mat-label>Email</mat-label>
+                                        <input matInput type="email" placeholder="example@email.com">
+                                        <mat-icon matSuffix>email</mat-icon>
+                                    </mat-form-field>
+                                    <div fxLayout="row" fxLayoutGap="10px">
+                                        <div fxFlex>
+                                            <mat-form-field appearance="outline" class="full-width-field">
+                                                <mat-label>Phone</mat-label>
+                                                <input matInput type="text" placeholder="(555) 555 5555">
+                                                <mat-icon matSuffix>phone</mat-icon>
+                                            </mat-form-field>
+                                        </div>
+                                        <div fxFlex>
+                                            <mat-form-field appearance="outline" class="full-width-field">
+                                                <mat-label>Country</mat-label>
+                                                <input matInput type="text" placeholder="United States">
+                                                <mat-icon matSuffix>map</mat-icon>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div fxLayout="row" fxLayoutGap="10px">
+                                        <div fxFlex>
+                                            <mat-form-field appearance="outline" class="full-width-field">
+                                                <mat-label>Password</mat-label>
+                                                <input matInput type="password" placeholder="Password">
+                                                <mat-icon matSuffix>fingerprint</mat-icon>
+                                            </mat-form-field>
+                                        </div>
+                                        <div fxFlex>
+                                            <mat-form-field appearance="outline" class="full-width-field">
+                                                <mat-label>Confirm Password</mat-label>
+                                                <input matInput type="password" placeholder="Confirm Password">
+                                                <mat-icon matSuffix>fingerprint</mat-icon>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="app-checkbox mb-1">
+                                        <mat-checkbox> 
+                                            I agree to all 
+                                            <a _ngcontent-ntc-c6="" href="#" target="_blank">Terms and Conditions of Use.</a>
+                                        </mat-checkbox>
+                                    </div>
+                                    <button mat-raised-button class="app-bg-accent app-submit w-100">
+                                        REGISTER
+                                    </button>
+                                    <div class="app-divider text-center">
+                                        <small>Or connect with social medias</small>
+                                    </div>
+                                    <button mat-raised-button class="app-bg-warn app-submit w-100 mb-3">
+                                        <i class="fa fa-1x fa-facebook-f"></i> &nbsp; Register with Google
+                                    </button>
+                                    <button mat-raised-button class="app-bg-primary app-submit w-100">
+                                        <i class="fa fa-1x fa-google"></i> &nbsp; Register with Facebook
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

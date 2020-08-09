@@ -1,5 +1,6 @@
 @import '~ngx-toastr/toastr';
 @import './assets/scss/themes';
+@import './assets/scss/material';
 @import './assets/scss/variables';
 
 .light-theme {
@@ -24,7 +25,7 @@
         color: $app-light;
         background-image: $app-light-warn-bg;
     }
-    .app-home{
+    .app-main{
         .app-bg-top{
             background: url('assets/images/banner-4.png') no-repeat;
             background-size: 100% 80%
@@ -62,7 +63,7 @@
         color: $app-light;
         background-image: $app-dark-warn-bg;
     }
-    .app-home{
+    .app-main{
         .app-bg-top{
             background: url('assets/images/banner-4.dark.png') no-repeat;
             background-size: 100% 80%
@@ -101,9 +102,52 @@ html, body {
 .app-shadow{
     box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.10), 0 7px 10px -5px rgba(0, 0, 0, 0.40);
 }
+.app-rounded-5{
+    border-radius: 5px;
+    overflow: hidden;
+}
 .app-rounded-10{
     border-radius: 10px;
+    overflow: hidden;
 }
 .app-rounded-20{
     border-radius: 20px;
+    overflow: hidden;
 }
+.full-width-field {
+    width: 100%;
+}
+
+// ngx toastr css
+.toast-container {
+    .ngx-toastr {
+        width: auto !important;
+        max-width: 300px !important;
+        transition: all ease 0.5s;
+        background-size: 20px;
+        padding: 8px 20px 8px 50px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        .toast-title {
+            font-size: 0.9rem;
+        }
+        .toast-message {
+            font-size: 0.9rem;
+        }
+    }
+    .ngx-toastr:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    }
+    .toast-error {
+        background-color: #ff4081;
+        box-shadow: 0 0 15px rgba(150, 0, 75, 0.5);
+    }
+    .toast-success {
+        background-color: #6200ea;
+        box-shadow: 0 0 15px rgb(98, 0, 234, 0.5);
+    }
+    .toast-warning {
+        background-color: #ffa654;
+        box-shadow: 0 0 15px rgba(150, 100, 0, 0.5);
+    }
+  }
